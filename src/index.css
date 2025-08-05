@@ -1,0 +1,129 @@
+@import "tailwindcss";
+
+@theme {
+  --color-mint-500: oklch(0.72 0.11 178);
+}
+
+html {
+  /* scroll-behavior: smooth; */
+  font-size: 16px;
+  /* Default font size */
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  /* font-weight: 400; */
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+} */
+
+svg {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+body {
+  margin: 0;
+  /* display: flex; */
+  /* place-items: center; */
+  /* min-width: 320px; */
+  /* min-height: 100vh; */
+}
+
+h1 {
+  /* font-size: 3.2em; */
+  /* line-height: 1.1; */
+}
+
+.intern-form_label {
+  font-size: 0.775rem;
+  font-weight: 500;
+  line-height: 1.25rem;
+  color: #213547;
+  /* Tailwind's gray-600 */
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+
+  button {
+    cursor: pointer;
+  }
+}
+
+body::-webkit-scrollbar {
+  width: 0.3rem;
+}
+
+body::-webkit-scrollbar-track {
+  background: #195c8c;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: var(--color-yellow-400);
+}
+
+.animationbtn:after {
+  background-color: rgb(248, 227, 68);
+  content: "";
+  display: block;
+  height: 4px;
+  -webkit-transform: scaleX(0);
+  transform: scaleX(0);
+  -webkit-transform-origin: left;
+  transform-origin: left;
+  transition: -webkit-transform 0.3s ease;
+  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, -webkit-transform 0.3s ease;
+  width: 100%;
+  top: 0.2rem;
+  position: relative;
+}
+
+.animationbtn:hover:after {
+  -webkit-transform: scaleX(1);
+  transform: scaleX(1);
+}
+
+.heading_word {
+  transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  transition: all, opacity 2s cubic-bezier(0.5, 0, 0, 1),
+    transform 2s cubic-bezier(0.5, 0, 0, 1);
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.animate-scaleIn {
+  animation: scaleIn 0.3s ease-out forwards;
+}
