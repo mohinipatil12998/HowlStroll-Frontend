@@ -10,23 +10,23 @@ export const Header = React.forwardRef(
     const navigate = useNavigate();
     return (
       <header
-        className={`sticky top-0 gap-5 flex bg-[#195c8c] text-white p-4 h-[5rem] z-99 justify-between`}
+        className={`sticky top-0 gap-5 flex text-black p-4 h-[5rem] z-99 justify-between bg-white`}
         ref={ref}
       >
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl font-bold">SimplyIntern</h1>
+            <h1 className="text-2xl font-bold">HowIStroll</h1>
           </div>
           {/* <div className="text-whit font-bold text-lg">{ROLE}</div> */}
         </div>
         <nav className=" max-md:hidden flex justify-end">
-          <ul className="flex items-center w-full font-bold gap-3 text-white">
+          <ul className="flex items-center w-full font-bold gap-3 ">
             {isLandingPage && (
               <>
                 <li>
                   <Button
                     onClick={() => scrollToSection("home")}
-                    className="text-white font-semibold text-[1rem] bg-transparent animationbtn"
+                    className=" font-semibold text-[1rem] bg-transparent animationbtn"
                   >
                     Home
                   </Button>
@@ -34,17 +34,17 @@ export const Header = React.forwardRef(
                 <li>
                   <Button
                     onClick={() => scrollToSection("about")}
-                    className="text-white font-semibold text-[1rem]  animationbtn"
+                    className=" font-semibold text-[1rem]  animationbtn"
                   >
-                    About
+                    Services
                   </Button>
                 </li>
                 <li>
                   <Button
                     onClick={() => scrollToSection("contact")}
-                    className="text-white  font-semibold text-[1rem] animationbtn"
+                    className="  font-semibold text-[1rem] animationbtn"
                   >
-                    Contact
+                    About
                   </Button>
                 </li>
                 {isAuthenticated && (

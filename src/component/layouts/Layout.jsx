@@ -1,5 +1,6 @@
 import { Outlet } from "react-router";
 import { useRef } from "react";
+import { Header } from "./Header";
 
 export const Layout = () => {
   const headerRef = useRef(null);
@@ -21,12 +22,9 @@ export const Layout = () => {
         scrollToSection={scrollToSection}
         isLandingPage={true}
       />
-      <main className="flex-grow p-4">
+      <main className="flex-grow">
         <Outlet />
       </main>
-      <footer className="bg-blue-400 text-white p-4 text-center">
-        &copy; {new Date().getFullYear()} HowIStroll
-      </footer>
     </>
   );
 };
