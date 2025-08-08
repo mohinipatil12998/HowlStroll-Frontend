@@ -14,6 +14,7 @@ import { Input } from "../../component/ui/Input";
 import { Link } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
 import HeroSection from "../../component/layouts/HeroSection";
+import axiosInstance from "../../lib/axiosInstance";
 
 
 
@@ -38,8 +39,11 @@ export const Register = () => {
       if (buttonRef.current) {
         buttonRef.current.innerHTML = `Signing Up...`;
       }
-
-       console.log("User data:", user);
+     const response = await axiosInstance.post("/users", {
+      ...user
+     })
+      console.log('response', response);
+      
       if (status === 200) {
         navigate("/login");
       }

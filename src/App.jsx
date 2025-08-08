@@ -7,14 +7,18 @@ import { Layout } from "./component/layouts/Layout";
 
 import { Login } from "./pages/Auth/Login";
 import { Register } from "./pages/Auth/Register";
+import Dashboard from "./pages/Dashboard/Dashboard";
+import { ServicePage } from "./pages/ServiceListing/ServicePage";
 
 
 function App() {
   return (
     <Routes>
-       
+      
       <Route element={<Layout />}>
-        <Route index element={<Home />} />
+        <Route index element={<Home />} />  
+        <Route path="dashboard" element={<Dashboard />} />
+        <Route path="service-provider/:serviceType" element={<ServicePage />} />
       </Route>
 
       <Route element={<AuthLayout />}>

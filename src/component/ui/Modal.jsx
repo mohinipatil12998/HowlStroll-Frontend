@@ -1,5 +1,6 @@
 import React from 'react';
 
+// eslint-disable-next-line no-unused-vars
 export const Modal = ({ show, submitText, onClick, onClose, title, children }) => {
   if (!show) {
     return null;

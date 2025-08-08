@@ -2,14 +2,13 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'https://localhost:59424/api', // Replace with your actual base URL
+  baseURL: 'http://localhost:8080/api', // Replace with your actual base URL
   timeout: 10000, // Request timeout
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Request Interceptor
 axiosInstance.interceptors.request.use(
   (config) => {
     // Get the token from localStorage, sessionStorage, or a global state manager (e.g., Redux, Zustand)

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Menu,
   X,
@@ -18,11 +18,14 @@ import {
   Search,
 } from "lucide-react";
 import { Footer } from "../../component/layouts/Footer";
+import { useNavigate } from "react-router";
+import { fetchBreeds } from "../../lib/dog";
 
-// The main App component that renders the entire landing page
 function Home() {
+
+  const navigate = useNavigate();
   // eslint-disable-next-line no-unused-vars
-  const [dogBreed, setDogBreed] = useState("");
+  const [dogBreed, setDogBreed] = useState([]);
   // eslint-disable-next-line no-unused-vars
   const [selectedService, setSelectedService] = useState("Dog Walking");
   const [location, setLocation] = useState("");
@@ -31,30 +34,46 @@ function Home() {
   // eslint-disable-next-line no-unused-vars
   const handleSearch = () => {
     console.log("Searching for dog walkers for breed:", dogBreed);
-    // Here you would typically call an API to get dog walkers
-    // For this example, we'll just log to the console.
-    // E.g., fetch(`/api/dog-walkers?breed=${dogBreed}`);
-  };
+   };
+
+   const SERVICE_MAPPING = {
+    "Dog Walking": 'dog-walkers',
+    "Dog Vets": 'vets',
+   }
 
   const handleComprehensiveSearch = () => {
     console.log("Searching with the following criteria:");
     console.log("Service:", selectedService);
     console.log("Location:", location);
     console.log("Pet Type:", petType);
+
+    navigate(`/service-provider/${SERVICE_MAPPING[selectedService]}`)
     // Here you would typically call an API to search for services
   };
 
-  // Service buttons data
-  // eslint-disable-next-line no-unused-vars
-  const services = [
-    { name: "Pet Boarding", icon: <Hotel size={20} /> },
-    { name: "House Sitting", icon: <Home size={20} /> },
-    { name: "Dog Walking", icon: <PawPrint size={20} /> },
-    { name: "Pet Daycare", icon: <Bone size={20} /> },
-    { name: "Pet Grooming", icon: <Scissors size={20} /> },
-    { name: "Pet Taxi", icon: <Car size={20} /> },
-  ];
+  const [data, setData] = useState([]);
+  // const [breedInfo, setBreedInfo] = useState([]);
+  // const [selectedBreedId, setSelectedBreedId] = useState("");
+  // const [isLoading, setIsLoading] = useState(false);
 
+  useEffect(() => {
+    const loadData = async () => {
+     
+        // setIsLoading((loading) => !loading);
+        const fetchedData = await fetchBreeds();
+        // const fetchedBreedInfo = await fetchBreeds();
+        // setBreedInfo(fetchedBreedInfo);
+        setData(fetchedData);
+        // setIsLoading((loading) => !loading);
+      
+    };
+
+    loadData();
+  }, []);
+ const services = [
+    { name: 'Dog Walking', icon: <> </> },
+    { name: 'Dog Vets', icon: <> </> },
+  ];
   return (
     <>
       <section
@@ -85,9 +104,25 @@ function Home() {
             <h2 className="text-lg font-bold text-gray-800 mb-4">
               I am looking for 
             </h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 mb-6">
+                {services.map((service) => (
+                  <button
+                    key={service.name}
+                    onClick={() => setSelectedService(service.name)}
+                    className={`flex flex-col items-center justify-center p-4 rounded-lg shadow-md transition-all duration-300
+                      ${selectedService === service.name
+                        ? 'bg-indigo-600 text-white transform scale-105'
+                        : 'bg-white text-gray-700 hover:bg-gray-100'
+                      }`}
+                  >
+                    {service.icon}
+                    <span className="mt-2 text-sm font-semibold text-center">{service.name}</span>
+                  </button>
+                ))}
+              </div>
             <div className="grid grid-cols-3 md:grid-cols-3 gap-6 mb-6">
               <div>
-                <label className="text-sm font-medium text-gray-600 mb-2 block">
+                <label className="font-bold text-sm font-medium text-gray-600 mb-2 block">
                   Near me in
                 </label>
                 <input
@@ -100,7 +135,7 @@ function Home() {
               </div>
 
               <div>
-                <label className="text-sm font-medium text-gray-600 mb-2 block">
+                <label className="font-bold text-sm font-medium text-gray-600 mb-2 block">
                   Dog Breed
                 </label>
                 <div className="relative">
@@ -109,8 +144,11 @@ function Home() {
                     onChange={(e) => setPetType(e.target.value)}
                     className="w-full px-4 py-3 rounded-lg border border-gray-300 bg-white appearance-none focus:outline-none focus:border-indigo-500 transition-colors duration-300"
                   >
-                    <option value="Dog">Dog</option>
-                    
+                    {
+                      data.breeds?.map(({name}) => (
+                        <option key={name} value={name}>{name}</option>
+                      ))
+                    }                    
                   </select>
                   <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                     <svg
@@ -139,60 +177,106 @@ function Home() {
         </div>
         
       </section>
-      <section className="bg-gray-100  md:py-24">
-        <div className="container mx-auto px-6 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Key Features
-          </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-12">
-            Discover what makes our platform stand out from the rest.
-          </p>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Feature 1 */}
-            <div className="bg-white p-8 rounded-lg shadow-lg flex flex-col items-center transform hover:scale-105 transition-transform duration-300">
-              <div className="bg-indigo-100 p-4 rounded-full mb-4">
-                <Star size={32} className="text-indigo-600" />
+       <section className="bg-gray-100 py-16 md:py-24">
+          <div className="container mx-auto px-6 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Key Features
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-12">
+              Discover what makes our platform stand out from the rest.
+            </p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {/* Feature 1: Verified Pet Sitters */}
+              <div className="bg-white p-8 rounded-lg shadow-lg flex flex-col items-center transform hover:scale-105 transition-transform duration-300">
+                <div className="bg-indigo-100 p-4 rounded-full mb-4">
+                  <Shield size={32} className="text-indigo-600" />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  Verified Dog Walker
+                </h3>
+                <p className="text-gray-600 text-center">
+                  All our sitters undergo a rigorous verification process, including background checks, to ensure your pet is in safe hands.
+                </p>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                Feature One
-              </h3>
-              <p className="text-gray-600 text-center">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit
-                tellus, luctus nec ullamcorper mattis.
-              </p>
-            </div>
 
-            {/* Feature 2 */}
-            <div className="bg-white p-8 rounded-lg shadow-lg flex flex-col items-center transform hover:scale-105 transition-transform duration-300">
-              <div className="bg-indigo-100 p-4 rounded-full mb-4">
-                <Zap size={32} className="text-indigo-600" />
+              {/* Feature 2: 24/7 Customer Support */}
+              <div className="bg-white p-8 rounded-lg shadow-lg flex flex-col items-center transform hover:scale-105 transition-transform duration-300">
+                <div className="bg-indigo-100 p-4 rounded-full mb-4">
+                  <Zap size={32} className="text-indigo-600" />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  24/7 Customer Support
+                </h3>
+                <p className="text-gray-600 text-center">
+                  Our dedicated team is available around the clock to help with any questions or emergencies that may arise.
+                </p>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                Feature Two
-              </h3>
-              <p className="text-gray-600 text-center">
-                Sed do eiusmod tempor incididunt ut labore et dolore magna
-                aliqua. Ut enim ad minim veniam.
-              </p>
-            </div>
 
-            {/* Feature 3 */}
-            <div className="bg-white p-8 rounded-lg shadow-lg flex flex-col items-center transform hover:scale-105 transition-transform duration-300">
-              <div className="bg-indigo-100 p-4 rounded-full mb-4">
-                <Shield size={32} className="text-indigo-600" />
+              {/* Feature 3: Secure and Easy Payments */}
+              <div className="bg-white p-8 rounded-lg shadow-lg flex flex-col items-center transform hover:scale-105 transition-transform duration-300">
+                <div className="bg-indigo-100 p-4 rounded-full mb-4">
+                  <Star size={32} className="text-indigo-600" />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  Secure and Easy Payments
+                </h3>
+                <p className="text-gray-600 text-center">
+                  Book and pay securely through our platform, with multiple payment options for your convenience.
+                </p>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                Feature Three
-              </h3>
-              <p className="text-gray-600 text-center">
-                Quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-                commodo consequat.
-              </p>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+
+        {/* How It Works Section */}
+        <section className="bg-white py-16 md:py-24">
+          <div className="container mx-auto px-6 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-12">
+              How It Works
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+              {/* Step 1 */}
+              <div className="flex flex-col items-center text-center">
+                <div className="bg-gray-100 p-6 rounded-full w-24 h-24 flex items-center justify-center mb-4">
+                  <span className="text-2xl font-bold text-indigo-600">1</span>
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  Step One
+                </h3>
+                <p className="text-gray-600">
+                  Description of the first step. Explain what users need to do to get started.
+                </p>
+              </div>
+
+              {/* Step 2 */}
+              <div className="flex flex-col items-center text-center">
+                <div className="bg-gray-100 p-6 rounded-full w-24 h-24 flex items-center justify-center mb-4">
+                  <span className="text-2xl font-bold text-indigo-600">2</span>
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  Step Two
+                </h3>
+                <p className="text-gray-600">
+                  Description of the second step. Detail the next part of the process for your users.
+                </p>
+              </div>
+
+              {/* Step 3 */}
+              <div className="flex flex-col items-center text-center">
+                <div className="bg-gray-100 p-6 rounded-full w-24 h-24 flex items-center justify-center mb-4">
+                  <span className="text-2xl font-bold text-indigo-600">3</span>
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  Step Three
+                </h3>
+                <p className="text-gray-600">
+                  Description of the final step. Describe what happens after the process is complete.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
 
       <section className="bg-indigo-600 text-white py-16 md:py-24">
         <div className="container mx-auto px-6 text-center">
