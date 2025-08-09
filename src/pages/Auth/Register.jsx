@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import {
@@ -12,15 +12,27 @@ import {
 import { Button } from "../../component/ui/Button";
 import { Input } from "../../component/ui/Input";
 import { Link } from "react-router-dom";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, ShieldIcon, UserIcon, WorkflowIcon } from "lucide-react";
 import HeroSection from "../../component/layouts/HeroSection";
-import axiosInstance from "../../lib/axiosInstance";
-
-
+import { Label } from "@radix-ui/react-label";
+import {
+  MultiSelect,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../../component/ui/Select";
+// import axiosInstance from "../../lib/axiosInstance";
 
 export const Register = () => {
   const navigate = useNavigate();
-  const [isDisabled, setIsDisabled] = React.useState(false);
+  // eslint-disable-next-line no-unused-vars
+  const [valError, setValError] = useState("");
+  const [isDisabled, setIsDisabled] = useState(false);
+  const [IsShowSecretKeyInput, setIsShowSecretKeyInput] = useState(false);
+  const [selectedRole, setSelectedRole] = useState("ROLE_USER");
+  const [selectedTraits, setSelectedTraits] = useState([]);
   const buttonRef = useRef(null);
   const form = useForm({
     defaultValues: {
@@ -28,22 +40,23 @@ export const Register = () => {
       username: "",
       email: "",
       password: "",
-      role: "ROLE_STUDENT",
+      role: "ROLE_USER",
       key: "",
     },
   });
 
+  // eslint-disable-next-line no-unused-vars
   const handleSignUp = async (user) => {
     try {
       setIsDisabled(true);
-      if (buttonRef.current) {
-        buttonRef.current.innerHTML = `Signing Up...`;
-      }
-     const response = await axiosInstance.post("/users", {
-      ...user
-     })
-      console.log('response', response);
-      
+      //  e.preventDefault();
+    console.log('Form submitted with data:', { 
+      ...form.getValues(), 
+      role: selectedRole,
+      traits: selectedTraits
+    });
+  
+
       if (status === 200) {
         navigate("/login");
       }
@@ -52,8 +65,14 @@ export const Register = () => {
       // setValError(`Error: ${error || error.message}`);
     } finally {
       setIsDisabled(false);
-      buttonRef.current.innerHTML = `Sign In`;
+      buttonRef.current.blur();
     }
+  };
+
+   
+  const handleRoleChange = (value) => {
+    setSelectedRole(value);
+    setIsShowSecretKeyInput(value === "ROLE_ADMIN");
   };
 
   const handleSignIn = () => {
@@ -187,18 +206,11 @@ export const Register = () => {
                   )}
                 />
               </div>
-              {/* <div className="space-y-2">
+              <div className="space-y-2">
                 <Label htmlFor="role">Select Role</Label>
                 <Select
                   value={selectedRole}
-                  onValueChange={(value)=> {
-                    setSelectedRole(value);
-                    if(value === "ROLE_ADMIN"){
-                      setIsShowSecretKeyInput(true);
-                    }else{
-                      setIsShowSecretKeyInput(false);
-                    }
-                  }}
+                  onValueChange={handleRoleChange}
                   required
                 >
                   <SelectTrigger id="role">
@@ -227,42 +239,92 @@ export const Register = () => {
                         </div>
                       </div>
                     </SelectItem>
+                    <SelectItem value="ROLE_SERVICE_PROVIDER">
+                      <div className="flex items-center gap-2">
+                        <WorkflowIcon className="h-4 w-4" />
+                        <div className="flex flex-col">
+                          <span>Service Provider</span>
+                          <span className="text-xs text-muted-foreground">
+                            Standard access
+                          </span>
+                        </div>
+                      </div>
+                    </SelectItem>
                   </SelectContent>
                 </Select>
-              </div> */}
-              {
-              // isShowSecretKeyInput && 
-              (<div className="space-y-2">
-                {/* <FormField
-                  control={form.control}
-                  name="key"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="intern-form_label">Secret Key</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="text"
-                          className="text-md"
-                          placeholder="Secret Key"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                /> */}
-              </div>)
-              }
+              </div>
 
-              {/* {valError && (
+              { selectedRole === "ROLE_SERVICE_PROVIDER" && (
+                <div className="space-y-2">
+                <Label htmlFor="traits">Service Provider Traits</Label>
+                <MultiSelect
+                  values={selectedTraits}
+                  onValuesChange={setSelectedTraits}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select traits" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Dog Walking">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium">Dog Walking</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="Pet Sitting">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium">Pet Sitting</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="Grooming">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium">Grooming</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="Veterinarian">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium">Veterinarian</span>
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </MultiSelect>
+              </div>)}
+
+              {IsShowSecretKeyInput && (
+                <div className="space-y-2">
+                  <FormField
+                    control={form.control}
+                    name="key"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="intern-form_label">
+                          Secret Key
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            type="text"
+                            className="text-md"
+                            placeholder="Secret Key"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              )}
+
+              {valError && (
                 <Alert variant="default" className="text-[red]">
-                  <AlertDescription className="text-[red]">{valError}</AlertDescription>
+                  <AlertDescription className="text-[red]">
+                    {valError}
+                  </AlertDescription>
                 </Alert>
-              )} */}
+              )}
 
               <Button
                 type="submit"
-                className="w-full"
+                className="w-full bg-indigo-600 text-white  font-bold"
                 disabled={isDisabled}
                 ref={buttonRef}
               >
@@ -309,4 +371,3 @@ export const Register = () => {
     </Form>
   );
 };
-

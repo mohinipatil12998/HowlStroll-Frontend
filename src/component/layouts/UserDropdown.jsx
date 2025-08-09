@@ -3,6 +3,7 @@ import {
   LayoutDashboard,
   LogOut,
   WorkflowIcon,
+  PawPrint
 } from "lucide-react";
 import React, { useState, useRef, useEffect } from "react";
 
@@ -11,6 +12,9 @@ const UserDropdown = ({
   userName = "Mohini Mahajan",
   profileImageUrl = "",
   onLogout,
+  onDashboard,
+  onAddPets,
+  onAddTraits,
 }) => {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -28,6 +32,8 @@ const UserDropdown = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const closeDropdown = () => setOpen(false);
+
   return (
     <div className="relative inline-block text-left" ref={dropdownRef}>
       <div className="flex items-center space-x-2 cursor-pointer">
@@ -38,23 +44,51 @@ const UserDropdown = ({
         >
           {profileImageUrl ? <img src={profileImageUrl} /> : userInitial}
         </div>
-        <span className="text-white">{userName}</span>
+        <span className="">{userName}</span>
       </div>
 
       {open && (
-        <div className="absolute right-0 mt-5 w-40 bg-white rounded shadow-lg ring-1 ring-black ring-opacity-5 z-50">
-          <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700"></hr>
-          <button
-            onClick={onLogout}
-            className="block w-full text-start  px-4 py-2 text-sm text-red-600 hover:bg-red-100  hover: rounded"
-          >
-            <LogOut className="mr-2 h-4 w-4" />
-            Logout
-          </button>
+        <div className="absolute right-0 mt-5 w-48 bg-white rounded shadow-lg ring-1 ring-black ring-opacity-5 z-50 divide-y divide-gray-100">
+          <div className="p-2">
+          
+            <button
+              onClick={() => { onAddPets(); closeDropdown(); }}
+              className="group flex items-center w-full text-start px-4 py-2 text-sm text-gray-700 hover:bg-indigo-100 hover:text-indigo-600 rounded-md transition-colors"
+            >
+              <PawPrint className="mr-2 h-4 w-4 group-hover:text-indigo-600 transition-colors" />
+              Add Pets
+            </button>
+
+            
+            <button
+              onClick={() => { onAddTraits(); closeDropdown(); }}
+              className="group flex items-center w-full text-start px-4 py-2 text-sm text-gray-700 hover:bg-indigo-100 hover:text-indigo-600 rounded-md transition-colors"
+            >
+              <WorkflowIcon className="mr-2 h-4 w-4 group-hover:text-indigo-600 transition-colors" />
+              Add Traits
+            </button>
+            <button
+              onClick={() => {onDashboard(); closeDropdown(); }}
+              className="group flex items-center w-full text-start px-4 py-2 text-sm text-gray-700 hover:bg-indigo-100 hover:text-indigo-600 rounded-md transition-colors"
+            >
+              <LayoutDashboard className="mr-2 h-4 w-4 group-hover:text-indigo-600 transition-colors" />
+              Dashboard
+            </button>
+          </div>
+          <div className="p-2">
+            <button
+              onClick={() => { onLogout(); closeDropdown(); }}
+              className="group flex items-center w-full text-start px-4 py-2 text-sm text-red-600 hover:bg-red-100 rounded-md transition-colors"
+            >
+              <LogOut className="mr-2 h-4 w-4 group-hover:text-red-600 transition-colors" />
+              Logout
+            </button>
+          </div>
         </div>
       )}
     </div>
   );
 };
+
 
 export default UserDropdown;

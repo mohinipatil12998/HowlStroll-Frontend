@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Form,
   FormControl,
@@ -13,12 +13,12 @@ import { Button } from "../../component/ui/Button";
 import { Input } from "../../component/ui/Input";
 import { Eye, EyeOff } from "lucide-react";
 import HeroSection from "../../component/layouts/HeroSection";
+import { setItem } from "../../lib/localstorage";
 // import { getUserDataFromToken } from "../../lib/utils";
 
 export const Login = () => {
   const navigate = useNavigate();
-
-  const [isDisabled, setIsDisabled] = React.useState(false);
+  const [isDisabled, setIsDisabled] = useState(false);
   const buttonRef = useRef(null);
 
   const form = useForm({
@@ -39,7 +39,7 @@ export const Login = () => {
       buttonRef.current.disabled = true;
     }
     try {
-      // Simulate an API call to sign in 
+  setItem('isAuthenticated', true);
     } catch (error) {
       console.error("Sign in error:", error);
     } finally {
@@ -50,11 +50,13 @@ export const Login = () => {
     }
   };
 
+  
   const handleSignUp = () => {
     navigate("/register");
   };
 
-  // const [valError, setValError] = React.useState("");
+  // eslint-disable-next-line no-unused-vars
+  const [valError, setValError] = React.useState("");
   const [showPassword, setShowPassword] = React.useState(false);
 
   return (
@@ -138,15 +140,15 @@ export const Login = () => {
                 />
               </div>
 
-              {/* {error && (
+            {valError && (
                 <div variant="destructive">
-                  <div>{error}</div>
+                  <div>{valError}</div>
                 </div>
-              )} */}
+              )}
 
               <Button
                 type="submit"
-                className="w-full"
+                className="w-full bg-indigo-600 text-white  font-bold"
                 disabled={isDisabled}
                 onClick={handleSignIn}
                 ref={buttonRef}

@@ -7,8 +7,8 @@ export const Modal = ({ show, submitText, onClick, onClose, title, children }) =
   }
 
   return (
-    <div className="fixed inset-0 bg-transparent h-[90vh] bg-opacity-10 flex items-center justify-center z-99 p-4 font-sans">
-      <div className="bg-white rounded-xl shadow-2xl flex flex-col w-full max-w-6xl p-8 transform transition-all duration-300 scale-95 opacity-0 animate-scaleIn">
+    <div className="overflow-y-auto h-screen bg-black/80 backdrop-blur-sm fixed inset-0 bg-transparent h-[90vh] bg-opacity-10 flex items-center justify-center z-99 p-4 font-sans">
+      <div className="bg-white rounded-xl shadow-2xl flex flex-col w-full max-w-2xl p-8 transform transition-all duration-300 scale-95 opacity-0 animate-scaleIn">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-3xl font-extrabold text-gray-900 text-center flex-grow">{title}</h2>
           <button
@@ -22,7 +22,7 @@ export const Modal = ({ show, submitText, onClick, onClose, title, children }) =
          <div className="relative p-8 pt-4 overflow-y-auto h-full"> {/* Added padding, overflow-y-auto, and max-h */}
           {children}
         </div>
-          <div className="flex justify-end space-x-4 pt-4">
+          {/* <div className="flex justify-end space-x-4 pt-4">
           <button
             type="button"
             onClick={onClose}
@@ -36,7 +36,7 @@ export const Modal = ({ show, submitText, onClick, onClose, title, children }) =
           >
            {submitText || 'Submit'}
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );

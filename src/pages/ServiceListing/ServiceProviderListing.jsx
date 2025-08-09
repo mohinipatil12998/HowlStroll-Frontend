@@ -1,7 +1,7 @@
 import { MapPin, Search, Star } from "lucide-react";
 import { useMemo, useState } from "react";
 
-export function ServiceProviderListing({ providers, title, subtitle }) {
+export function ServiceProviderListing({ providers, title, subtitle,setIsModalOpen   }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedLocation, setSelectedLocation] = useState('All');
   const [selectedService, setSelectedService] = useState('All');
@@ -176,7 +176,9 @@ export function ServiceProviderListing({ providers, title, subtitle }) {
             </div>
             
             <div className="mt-8">
-              <button className="w-full bg-accent-600  font-bold py-3 rounded-full shadow-lg hover:bg-accent-700 transition-colors duration-200">
+              <button onClick={()=>{ 
+                setIsModalOpen(true);
+              }} className="w-full bg-indigo-600 text-white  font-bold py-3 rounded-full shadow-lg hover:bg-accent-700 transition-colors duration-200">
                 Book Now
               </button>
             </div>

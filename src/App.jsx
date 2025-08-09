@@ -9,16 +9,22 @@ import { Login } from "./pages/Auth/Login";
 import { Register } from "./pages/Auth/Register";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import { ServicePage } from "./pages/ServiceListing/ServicePage";
+import { PrivateRoutes } from "./component/layouts/PrivateRoutes";
+import AddPets from "./pages/ServiceListing/AddPets";
 
 
 function App() {
   return (
     <Routes>
       
-      <Route element={<Layout />}>
+      <Route element={<Layout isLandingPage={true} />}>
         <Route index element={<Home />} />  
-        <Route path="dashboard" element={<Dashboard />} />
-        <Route path="service-provider/:serviceType" element={<ServicePage />} />
+      </Route>
+
+      <Route element={<Layout isLandingPage={false}/>}>
+       <Route path="dashboard" element={<PrivateRoutes><Dashboard /></PrivateRoutes>} />
+
+       <Route path="service-provider/:serviceType" element={<PrivateRoutes><ServicePage /></PrivateRoutes>} />
       </Route>
 
       <Route element={<AuthLayout />}>
