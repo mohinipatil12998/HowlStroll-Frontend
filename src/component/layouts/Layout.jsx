@@ -1,11 +1,13 @@
-import { Outlet } from "react-router";
+import { Outlet, useNavigate } from "react-router";
 import { useRef, useState } from "react";
 import { Header } from "./Header";
 import { Modal } from "../ui/Modal";
 import AddPets from "../../pages/ServiceListing/AddPets";
 import { ServiceProviderTraitsForm } from "../../pages/ServiceListing/ServiceProviderTraitsForm";
+import { removeItem } from "../../lib/localstorage";
 
 export const Layout = ({ isLandingPage }) => {
+  const navigate = useNavigate();
   const [isAddPetsOpen, setIsAddPetsOpen] = useState(false);
   const [isAddTraitsOpen, setIsAddTraitsOpen] = useState(false);
   const headerRef = useRef(null);
@@ -20,6 +22,13 @@ export const Layout = ({ isLandingPage }) => {
       });
     }
   };
+
+    const handleLogout = () => {
+      removeItem('isAuthenticated');
+      removeItem('token');  
+      removeItem('user');
+      navigate("/login");
+  }
   const isAuthenticated = localStorage.getItem("isAuthenticated"); // Replace with actual authentication logic
   return (
     <>
@@ -30,6 +39,7 @@ export const Layout = ({ isLandingPage }) => {
         setIsAddPetsOpen={setIsAddPetsOpen}
         setIsAddTraitsOpen={setIsAddTraitsOpen}
         isAuthenticated={isAuthenticated}
+        onLogout={handleLogout}
       />
       <main className="flex-grow">
         <Outlet />

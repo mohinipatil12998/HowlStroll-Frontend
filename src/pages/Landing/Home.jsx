@@ -22,6 +22,7 @@ import { useNavigate } from "react-router";
 import { fetchBreeds } from "../../lib/dog";
 import { Modal } from "../../component/ui/Modal";
 import AddPets from "../ServiceListing/AddPets";
+import { removeItem } from "../../lib/localstorage";
 
 function Home() {
   const navigate = useNavigate();
@@ -37,6 +38,7 @@ function Home() {
   const handleSearch = () => {
     console.log("Searching for dog walkers for breed:", dogBreed);
   };
+
 
   const SERVICE_MAPPING = {
     "Dog Walking": "dog-walkers",

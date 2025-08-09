@@ -23,6 +23,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../../component/ui/Select";
+import axiosInstance from "../../lib/axiosInstance";
 // import axiosInstance from "../../lib/axiosInstance";
 
 export const Register = () => {
@@ -46,7 +47,7 @@ export const Register = () => {
   });
 
   // eslint-disable-next-line no-unused-vars
-  const handleSignUp = async (user) => {
+  const handleSignUp = async () => {
     try {
       setIsDisabled(true);
       //  e.preventDefault();
@@ -55,8 +56,16 @@ export const Register = () => {
       role: selectedRole,
       traits: selectedTraits
     });
-  
 
+
+    const response = await axiosInstance.post("/auth/register", {
+      ...form.getValues(),
+      role: selectedRole,
+      traits: selectedTraits
+    });
+
+      const { status } = response;
+      console.log("Registration successful:", response.data);
       if (status === 200) {
         navigate("/login");
       }

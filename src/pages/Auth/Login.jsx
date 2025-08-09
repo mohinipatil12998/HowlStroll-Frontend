@@ -14,6 +14,7 @@ import { Input } from "../../component/ui/Input";
 import { Eye, EyeOff } from "lucide-react";
 import HeroSection from "../../component/layouts/HeroSection";
 import { setItem } from "../../lib/localstorage";
+// import { login } from "../../lib/api";
 // import { getUserDataFromToken } from "../../lib/utils";
 
 export const Login = () => {
@@ -23,15 +24,15 @@ export const Login = () => {
 
   const form = useForm({
     defaultValues: {
-      username: "",
+      usernameOrEmail: "",
       password: "",
     },
   });
 
 
-  useEffect(() => {
-    // navigate("/home");
-  }, [navigate]);
+  // useEffect(() => {
+  //   navigate("/");
+  // }, [navigate]);
 
   const handleSignIn = async () => {
     setIsDisabled(true);
@@ -39,7 +40,22 @@ export const Login = () => {
       buttonRef.current.disabled = true;
     }
     try {
-  setItem('isAuthenticated', true);
+     
+      // const response = await login(form.getValues());
+      // const { token, user } = response.data;
+      // console.log("Login successful:", response.data);
+      setItem('isAuthenticated', true);
+      // setItem('token', token);
+      // setItem('user', user);
+      // setItem('role', user.role);
+      const role = localStorage.getItem("role");
+      if(role === "ROLE_SERVICE_PROVIDER") {
+        navigate("/");
+      }else if(role === "ROLE_USER") {
+        navigate("/");
+      }else{
+        navigate("/dashboard");
+      }
     } catch (error) {
       console.error("Sign in error:", error);
     } finally {
@@ -83,7 +99,7 @@ export const Login = () => {
               <div className="space-y-2">
                 <FormField
                   control={form.control}
-                  name="username"
+                  name="usernameOrEmail"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="shad-form_label">
